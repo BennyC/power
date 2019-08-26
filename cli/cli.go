@@ -25,7 +25,7 @@ type Cli struct {
 
 // NewCli returns a new version of the CLI application
 func NewCli() *Cli {
-	// @todo need to flag out the output type
+	// TODO need to flag out the output type
 	return &Cli{
 		OutputType:  power.OutputText,
 		PowerOutput: []int{1, 5, 10, 20},
@@ -35,6 +35,7 @@ func NewCli() *Cli {
 // Run the Cli Application and return an exit code for the process to output
 // to the terminal
 func (c *Cli) Run(args ...string) (int, error) {
+	// TODO better error handling/reporting from calls
 	if len(args) == 0 {
 		return 2, ErrNoFilePath
 	}
@@ -95,6 +96,7 @@ func (c *Cli) File(p string) error {
 // Output power readings for a GPX file
 func (c *Cli) Output(g *power.Gpx) {
 	var out power.Outputter
+	// TODO maybe put in slice & need to implement SVG
 	switch c.OutputType {
 	case power.OutputText:
 		out = io.TextOutputter{}
