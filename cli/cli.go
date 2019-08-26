@@ -1,4 +1,4 @@
-package power
+package cli
 
 import (
 	"encoding/xml"
@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/fudge/power"
+	"github.com/fudge/power/io"
 )
 
 // ErrNoFilePath when no file path has been provided via the args for Run
@@ -17,13 +20,18 @@ var ErrFileDoesNotExist = errors.New("file or directory does not exist")
 
 // Cli struct is the CLI application struct
 type Cli struct {
-	Path  string
-	Files []*Gpx
+	Path        string
+	Files       []*power.Gpx
+	PowerOutput []int
+	OutputType  int
 }
 
 // NewCli returns a new version of the CLI application
 func NewCli() *Cli {
-	return &Cli{}
+	return &Cli{
+		OutputType:  power.OutputText,
+		PowerOutput: []int{1, 5, 10, 20},
+	}
 }
 
 // Run the Cli Application and return an exit code for the process to output
@@ -80,17 +88,19 @@ func (c *Cli) File(p string) error {
 	defer f.Close()
 	byteValue, _ := ioutil.ReadAll(f)
 
-	var gpx Gpx
+	var gpx power.Gpx
 	xml.Unmarshal(byteValue, &gpx)
 	c.Files = append(c.Files, &gpx)
 	return nil
 }
 
 // Output power readings for a GPX file
-func (c *Cli) Output(g *Gpx) {
-	fmt.Println(g.Name)
-	for _, i := range [4]int{1, 5, 10, 20} {
-		p := g.CalculateBestPower(i * 60)
-		fmt.Printf("-> best %v min power: %.2f\n", i, p)
+func (c *Cli) Output(g *power.Gpx) {
+	var out power.Outputter
+	switch c.OutputType {
+	case power.OutputText:
+		out = io.TextOutputter{}
 	}
+
+	out.Output(g, c.PowerOutput)
 }

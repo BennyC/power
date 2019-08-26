@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fudge/power"
+	"github.com/fudge/power/cli"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	a := power.NewCli()
+	a := cli.NewCli()
 	exit, _ := a.Run(os.Args[1:]...)
 	os.Exit(exit)
 }

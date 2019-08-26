@@ -1,4 +1,4 @@
-package power
+package cli
 
 import (
 	"testing"
