@@ -29,7 +29,7 @@ type Cli struct {
 // NewCli returns a new version of the CLI application
 func NewCli() *Cli {
 	return &Cli{
-		OutputType:  power.OutputText,
+		OutputType:  power.OutputJSON,
 		PowerOutput: []int{1, 5, 10, 20},
 	}
 }
@@ -100,6 +100,8 @@ func (c *Cli) Output(g *power.Gpx) {
 	switch c.OutputType {
 	case power.OutputText:
 		out = io.TextOutputter{}
+	case power.OutputJSON:
+		out = io.JSONOutputter{}
 	}
 
 	out.Output(g, c.PowerOutput)
