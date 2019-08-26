@@ -29,11 +29,11 @@ func NewCli() *Cli {
 // Run the Cli Application and return an exit code for the process to output
 // to the terminal
 func (c *Cli) Run(args ...string) (int, error) {
-	if len(args) == 1 {
+	if len(args) == 0 {
 		return 2, ErrNoFilePath
 	}
 
-	if err := c.Load(args[1]); err != nil {
+	if err := c.Load(args[0]); err != nil {
 		fmt.Printf("err: %v", err)
 		return 2, nil
 	}
