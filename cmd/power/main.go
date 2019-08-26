@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -14,6 +15,8 @@ func main() {
 	}
 
 	a := cli.NewCli()
-	exit, _ := a.Run(os.Args[1:]...)
+	flag.IntVar(&a.OutputType, "output", 0, "0: text, 1: json, 2: svg")
+	flag.Parse()
+	exit, _ := a.Run(flag.Args()...)
 	os.Exit(exit)
 }
