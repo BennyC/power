@@ -15,9 +15,6 @@ import (
 // ErrNoFilePath when no file path has been provided via the args for Run
 var ErrNoFilePath = errors.New("no file path provided")
 
-// ErrFileDoesNotExist when no file exists at a given path
-var ErrFileDoesNotExist = errors.New("file or directory does not exist")
-
 // Cli struct is the CLI application struct
 type Cli struct {
 	Path        string
@@ -28,6 +25,7 @@ type Cli struct {
 
 // NewCli returns a new version of the CLI application
 func NewCli() *Cli {
+	// @todo need to flag out the output type
 	return &Cli{
 		OutputType:  power.OutputJSON,
 		PowerOutput: []int{1, 5, 10, 20},
