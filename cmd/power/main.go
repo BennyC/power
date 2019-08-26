@@ -15,8 +15,9 @@ func main() {
 	}
 
 	a := cli.NewCli()
-	flag.IntVar(&a.OutputType, "output", 0, "0: text, 1: json, 2: svg")
+	flag.Var(&a.OutputType, "output", "0: text, 1: json, 2: svg")
 	flag.Parse()
+
 	exit, _ := a.Run(flag.Args()...)
 	os.Exit(exit)
 }

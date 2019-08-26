@@ -20,14 +20,14 @@ type Cli struct {
 	Path        string
 	Files       []*power.Gpx
 	PowerOutput []int
-	OutputType  int
+	power.OutputType
 }
 
 // NewCli returns a new version of the CLI application
 func NewCli() *Cli {
 	// @todo need to flag out the output type
 	return &Cli{
-		OutputType:  power.OutputJSON,
+		OutputType:  power.OutputText,
 		PowerOutput: []int{1, 5, 10, 20},
 	}
 }
