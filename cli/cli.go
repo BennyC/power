@@ -60,37 +60,40 @@ func (c *Cli) Load(path string) error {
 		return err
 	}
 
+	var paths []string
 	switch m := f.Mode(); {
 	case m.IsDir():
-		pp, err := filepath.Glob(filepath.Clean(path) + "/*.gpx")
-		if err != nil {
-			return err
-		}
-
-		for _, p := range pp {
-			c.File(p)
-		}
+		pp, _ := filepath.Glob(filepath.Clean(path) + "/*.gpx")
+		paths = pp
 	case m.IsRegular():
-		c.File(path)
+		paths = append(paths, path)
+	}
+
+	ch := make(chan power.Gpx, len(paths))
+	loadFiles(paths, ch)
+
+	for v := range ch {
+		c.Files = append(c.Files, &v)
 	}
 
 	return nil
 }
 
-// File reads a file and load its contents in the Files slice within the CLI
-func (c *Cli) File(p string) error {
-	f, err := os.Open(p)
-	if err != nil {
-		return err
+// loadFiles loads all paths given and passes the power.Gpx struct back across
+// a channel, also handles the closing of the channel once done
+func loadFiles(pp []string, ch chan power.Gpx) {
+	for _, p := range pp {
+		f, _ := os.Open(p)
+		defer f.Close()
+
+		byteValue, _ := ioutil.ReadAll(f)
+
+		var gpx power.Gpx
+		xml.Unmarshal(byteValue, &gpx)
+		ch <- gpx
 	}
 
-	defer f.Close()
-	byteValue, _ := ioutil.ReadAll(f)
-
-	var gpx power.Gpx
-	xml.Unmarshal(byteValue, &gpx)
-	c.Files = append(c.Files, &gpx)
-	return nil
+	close(ch)
 }
 
 // Output power readings for a GPX file
